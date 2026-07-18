@@ -104,15 +104,59 @@ function init() {
     styles.push(`.code-switcher .second-${spanId} {
   transform: translate(${secondX}px, ${secondY}px);
 }`)
-
   }
+  
+  addPreStyles(children, styles)
 
   const style = document.createElement("style")
   style.type = "text/css"
-  style.innerHTML = styles.join("\n")
+  const joinedStyles = styles.join("\n")
+  style.innerHTML =  `@media (prefers-reduced-motion: no-preference) {
+  ${joinedStyles}
+}`
   document.head.appendChild(style)
 
   window.setInterval(() => { toggleCode(target) }, 2000)
+}
+
+function addPreStyles(children, styles) {
+  const pre1 = children[0].getBoundingClientRect();
+  const height1 = pre1.height;
+  const width1 = pre1.width;
+
+  const pre2 = children[1].getBoundingClientRect();
+  const height2 = pre2.height;
+  const width2 = pre2.width;
+
+  const scaleY1 = height1 / height2;
+  const scaleX1 = width1 / width2;
+
+  const scaleY2 = height2 / height1;
+  const scaleX2 = width2 / width1;
+
+
+  styles.push(`.code-switcher-toggle-in > pre:nth-of-type(1) {
+  height: ${height1}px;
+  width: ${width1}px;
+}`)
+  styles.push(`.code-switcher-toggle-in > pre:nth-of-type(2) {
+  height: ${height1}px;
+  width: ${width1}px;
+}`)
+
+  styles.push(`.code-switcher-toggle-out > pre:nth-of-type(2) {
+  height: ${height2}px;
+  width: ${width2}px;
+}`)
+  styles.push(`.code-switcher-toggle-out > pre:nth-of-type(1) {
+  height: ${height2}px;
+  width: ${width2}px;
+}`)
+
+
+//   styles.push(`.code-switcher > pre:nth-of-type(1) {
+//   transform: matrix(${scaleX2}, 0, 0, ${scaleY2}, 0, 0)
+// }`)
 }
 
 /* Get the <span>s that have a 'data-switcher-id' attribute
