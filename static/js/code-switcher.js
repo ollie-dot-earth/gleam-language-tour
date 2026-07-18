@@ -78,32 +78,10 @@ function init() {
     const second = spans2[spanId]
 
     if (second == undefined) {
-      throw new Error("Differing contents. " + spanId + " not found in second element.")
+      throw new Error(`Differing contents. ${spanId} not found in second element.`)
     }
 
-    // Top offset for both
-    const firstTop = first.getBoundingClientRect().top;
-    const secondTop = second.getBoundingClientRect().top;
-
-    // Left offset for both
-    const firstLeft = first.getBoundingClientRect().left;
-    const secondLeft = second.getBoundingClientRect().left;
-
-    const firstX = secondLeft - firstLeft
-    const firstY = secondTop - firstTop
-
-    const secondX = firstLeft - secondLeft
-    const secondY = firstTop - secondTop
-
-    first.classList.add("first-" + spanId)
-    second.classList.add("second-" + spanId)
-
-    styles.push(`.code-switcher .first-${spanId} {
-  transform: translate(${firstX}px, ${firstY}px);
-}`)
-    styles.push(`.code-switcher .second-${spanId} {
-  transform: translate(${secondX}px, ${secondY}px);
-}`)
+    addSpanStyles(spanId, first, second, styles)
   }
   
   addPreStyles(children, styles)
@@ -116,7 +94,33 @@ function init() {
 }`
   document.head.appendChild(style)
 
-  window.setInterval(() => { toggleCode(target) }, 2000)
+  addButtons(target)
+}
+
+function addSpanStyles(spanId, first, second, styles) {
+  // Top offset for both
+  const firstTop = first.getBoundingClientRect().top;
+  const secondTop = second.getBoundingClientRect().top;
+
+  // Left offset for both
+  const firstLeft = first.getBoundingClientRect().left;
+  const secondLeft = second.getBoundingClientRect().left;
+
+  const firstX = secondLeft - firstLeft
+  const firstY = secondTop - firstTop
+
+  const secondX = firstLeft - secondLeft
+  const secondY = firstTop - secondTop
+
+  first.classList.add("first-" + spanId)
+  second.classList.add("second-" + spanId)
+
+  styles.push(`.code-switcher .first-${spanId} {
+  transform: translate(${firstX}px, ${firstY}px);
+}`)
+  styles.push(`.code-switcher .second-${spanId} {
+  transform: translate(${secondX}px, ${secondY}px);
+}`)
 }
 
 function addPreStyles(children, styles) {
@@ -127,13 +131,6 @@ function addPreStyles(children, styles) {
   const pre2 = children[1].getBoundingClientRect();
   const height2 = pre2.height;
   const width2 = pre2.width;
-
-  const scaleY1 = height1 / height2;
-  const scaleX1 = width1 / width2;
-
-  const scaleY2 = height2 / height1;
-  const scaleX2 = width2 / width1;
-
 
   styles.push(`.code-switcher-toggle-in > pre:nth-of-type(1) {
   height: ${height1}px;
@@ -152,11 +149,6 @@ function addPreStyles(children, styles) {
   height: ${height2}px;
   width: ${width2}px;
 }`)
-
-
-//   styles.push(`.code-switcher > pre:nth-of-type(1) {
-//   transform: matrix(${scaleX2}, 0, 0, ${scaleY2}, 0, 0)
-// }`)
 }
 
 /* Get the <span>s that have a 'data-switcher-id' attribute
@@ -178,6 +170,65 @@ function spansWithData(item) {
 function toggleCode(element) {
   const incoming = element.classList.toggle("code-switcher-toggle-in")
   element.classList.toggle("code-switcher-toggle-out", !incoming)
+
+  return incoming;
 }
+
+// buttons ----------------------------------------------------------------------
+
+function addButtons(target) {
+  const buttons = document.createElement("div")
+  buttons.classList.add("buttons")
+
+  addToggleButton(target, buttons)
+  addPlayPauseButton(target, buttons)
+
+  target.appendChild(buttons)
+}
+
+function addToggleButton(target, buttons) {
+  const button = document.createElement("button")
+  button.textContent = "Toggle"
+
+  button.onclick = function() {
+    toggleCode(target)
+  }
+
+  buttons.appendChild(button)
+}
+
+/* stores the window.setInterval return value 
+ * so we can stop it again */
+var autoplayIntervalId;
+
+function addPlayPauseButton(target, buttons) {
+  const button = document.createElement("button")
+  button.textContent = "Automatic"
+
+  button.onclick = function() {
+    const playing = target.classList.toggle("playing")
+
+    if (playing) {
+      button.textContent = "Pause" 
+
+      autoplayIntervalId = window.setInterval(automaticToggle(target), 3000)
+    } else {
+      button.textContent = "Automatic"
+
+      window.clearInterval(autoplayIntervalId)
+    }
+  }
+
+  buttons.appendChild(button)
+}
+
+function automaticToggle(target) {
+  toggleCode(target) 
+
+  return function() {
+    toggleCode(target) 
+  }
+}
+
 
 init()

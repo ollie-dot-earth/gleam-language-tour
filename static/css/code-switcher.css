@@ -62,6 +62,7 @@
   margin-bottom: var(--gap);
   background: var(--code-background);
   box-shadow: var(--drop-shadow);
+  border-radius: var(--border-radius);
 
   width: fit-content;
   height: fit-content;
@@ -75,16 +76,24 @@
   .code-switcher > :not(pre) {
     opacity: 0;
   }
+  .code-switcher > .buttons { 
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    button {
+      position: relative;
+      opacity: 1;
+    }
+  }
 
   .code-switcher {
     position: relative;
   }
 
   .code-switcher > pre {
-    background: transparent;
     position: absolute;
     margin-top: 0px;
-    top: 0;
+    top: 2.5em;
 
     transition: height 1000ms ease-in-out, width 1000ms ease-in-out;
   }
