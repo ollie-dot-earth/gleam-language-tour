@@ -68,6 +68,11 @@
   height: fit-content;
 }
 
+/* Hide buttons by default */
+.code-switcher > .buttons {
+  display: none;
+}
+
 /* Visually hide elements that arn't <pre>
  * I.e. stuff that would interfere with the animation, but should 
  * be kept around for people using screen readers.
@@ -77,6 +82,7 @@
     opacity: 0;
   }
   .code-switcher > .buttons { 
+    display: initial;
     opacity: 1;
     position: absolute;
     top: 0;
