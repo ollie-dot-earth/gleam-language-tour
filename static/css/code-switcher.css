@@ -57,6 +57,7 @@
 /* Codeblock styling */
 .code-switcher > pre {
   padding: var(--gap);
+  padding-top: calc(var(--gap) * 2);
   margin-right: var(--gap);
   margin-top: var(--gap);
   margin-bottom: var(--gap);
@@ -81,17 +82,59 @@
   .code-switcher > :not(pre) {
     opacity: 0;
   }
-  .code-switcher > .buttons { 
+  .code-switcher > p:first-of-type() {
+    display: none;
+  }
+  .code-switcher > pre > .buttons {
     display: initial;
     opacity: 1;
     position: absolute;
     top: 0;
+    left: 0;
     button {
+      border: none;
       position: relative;
       opacity: 1;
+      background: var(--color-accent-muted);
+      padding: var(--gap-half) var(--gap);
+      align-items: center;
+      justify-content: center;
+      gap: var(--gap);
+      font-size: var(--font-size-small);
+      color: var(--color-link);
+      border-radius: none;
+      text-decoration: none;
+      outline: 1px solid transparent;
+      outline-offset: -1px;
+      cursor: pointer;
+     
+      &:first-child {
+        /* border-right: 1px var(--color-accent-dark) dashed; */
+        margin-right: calc(var(--gap-half) / 3);
+      }
     }
   }
+  /* default content is 'Automatic' */
+.code-switcher > pre > .buttons >  button.play-pause::before {
+    content: "Automatic";
+  }
+  /* When the animation is autoplaying, the button should say 'Pause'. */
+  .code-switcher.playing > pre > .buttons > button.play-pause::before {
+    content: "Pause";
+  }
+  
+@media only screen and (min-width: 600px) {
+  .code-switcher > pre {
+  padding-right: calc(var(--gap) * 15);
+  padding-top: var(--gap);
 
+  > .buttons {
+    /* Display on the right side if the screen is wide enough */
+    right: 0;
+    left: unset;
+  }
+}
+}
   .code-switcher {
     position: relative;
   }
@@ -99,7 +142,7 @@
   .code-switcher > pre {
     position: absolute;
     margin-top: 0px;
-    top: 2.5em;
+    top: 0;
 
     transition: height 1000ms ease-in-out, width 1000ms ease-in-out;
   }
@@ -146,6 +189,10 @@
 
       background: transparent;
       box-shadow: none;
+      /* The buttons glued to this specific pre are now also to be hidden. */
+      .buttons {
+        opacity: 0;
+      }
     }
   }
 
@@ -182,6 +229,9 @@
 
       background: transparent;
       box-shadow: none;
+      .buttons {
+        opacity: 0;
+      }
     }
   }
 }
