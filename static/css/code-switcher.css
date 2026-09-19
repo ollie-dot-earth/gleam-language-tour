@@ -144,11 +144,12 @@
 	}
 
 	@media only screen and (min-width: 600px) {
-		#use-animation {
+		#use-example {
 			/* When animating and on wide screen, the codeblock is using space so efficiently it can now do with only 7 ems! */
 			height: 7em;
-			margin-top: -0.4em;
+			margin-block: -0.10em;
 		}
+
 
 		.code-switcher>pre {
 			padding-right: calc(var(--gap) * 15);
