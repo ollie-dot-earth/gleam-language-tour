@@ -126,38 +126,38 @@ function addSpanStyles(spanId, first, second, styles) {
 }
 
 function addPreStyles(children, styles) {
-	const pre1 = children[0].getBoundingClientRect();
-	const height1 = pre1.height;
-	const width1 = pre1.width;
+  const pre1 = children[0].getBoundingClientRect();
+  const height1 = pre1.height;
+  const width1 = pre1.width;
 
-	const pre2 = children[1].getBoundingClientRect();
-	const height2 = pre2.height;
-	const width2 = pre2.width;
+  const pre2 = children[1].getBoundingClientRect();
+  const height2 = pre2.height;
+  const width2 = pre2.width;
 
-	styles.push(`
-		.code-switcher-toggle-in > pre:nth-of-type(1) {
-			/* --pre-height: ${height1}px;  */
-			--pre-height: ${height2}px;
-			/* --pre-width: ${width2}px;*/
-			--pre-width: ${width1}px;
-		}
-		.code-switcher-toggle-in > pre:nth-of-type(2) {
-			/* --pre-height: ${height1}px;  */
-			--pre-height: ${height2}px;
-			/* --pre-width: ${width2}px; */
-			--pre-width: ${width1}px;
-		}
-		.code-switcher-toggle-out > pre:nth-of-type(2) {
-			--pre-height: ${height2}px;
-			/* --pre-width: ${width2}px; */
-			--pre-width: ${width1}px; /*a*/
-		}
-		.code-switcher-toggle-out > pre:nth-of-type(1) {
-			--pre-height: ${height2}px;
-			/* --pre-width: ${width2}px;*/
-			--pre-width: ${width1}px;
-		}
-	`);
+  styles.push(`
+    .code-switcher-toggle-in > pre:nth-of-type(1) {
+      /* --pre-height: ${height1}px;  */
+      --pre-height: ${height2}px;
+      /* --pre-width: ${width2}px;*/
+      --pre-width: ${width1}px;
+    }
+    .code-switcher-toggle-in > pre:nth-of-type(2) {
+      /* --pre-height: ${height1}px;  */
+      --pre-height: ${height2}px;
+      /* --pre-width: ${width2}px; */
+      --pre-width: ${width1}px;
+    }
+    .code-switcher-toggle-out > pre:nth-of-type(2) {
+      --pre-height: ${height2}px;
+      /* --pre-width: ${width2}px; */
+      --pre-width: ${width1}px; /*a*/
+    }
+    .code-switcher-toggle-out > pre:nth-of-type(1) {
+      --pre-height: ${height2}px;
+      /* --pre-width: ${width2}px;*/
+      --pre-width: ${width1}px;
+    }
+  `);
 }
 
 /* Get the <span>s that have a 'data-switcher-id' attribute
