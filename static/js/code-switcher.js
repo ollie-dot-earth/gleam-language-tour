@@ -136,25 +136,19 @@ function addPreStyles(children, styles) {
 
   styles.push(`
     .code-switcher-toggle-in > pre:nth-of-type(1) {
-      /* --pre-height: ${height1}px;  */
       --pre-height: ${height2}px;
-      /* --pre-width: ${width2}px;*/
       --pre-width: ${width1}px;
     }
     .code-switcher-toggle-in > pre:nth-of-type(2) {
-      /* --pre-height: ${height1}px;  */
       --pre-height: ${height2}px;
-      /* --pre-width: ${width2}px; */
       --pre-width: ${width1}px;
     }
     .code-switcher-toggle-out > pre:nth-of-type(2) {
       --pre-height: ${height2}px;
-      /* --pre-width: ${width2}px; */
       --pre-width: ${width1}px; /*a*/
     }
     .code-switcher-toggle-out > pre:nth-of-type(1) {
       --pre-height: ${height2}px;
-      /* --pre-width: ${width2}px;*/
       --pre-width: ${width1}px;
     }
   `);
@@ -185,7 +179,7 @@ function toggleCode(element) {
 
 // buttons ----------------------------------------------------------------------
 
-function addButtons(codeswitcher,target) {
+function addButtons(codeswitcher, target) {
   const buttons = document.createElement("div")
   buttons.classList.add("buttons")
 
@@ -214,24 +208,12 @@ function addPlayPauseButton(target, buttons) {
   const button = document.createElement("button")
   button.classList.add("play-pause")
   
-  // This is now set declaratively (hehe) by css
-  // button.textContent = "Automatic"
-
   button.onclick = function() {
     const playing = target.classList.toggle("playing")
-
-
+    
     if (playing) {
-
-      // This is now set declaratively (hehe) by css
-      // button.textContent = "Pause"
-
       autoplayIntervalId = window.setInterval(automaticToggle(target), 3000)
     } else {
-      
-      // This is now set declaratively (hehe) by css
-      // button.textContent = "Automatic"
-
       window.clearInterval(autoplayIntervalId)
     }
   }
