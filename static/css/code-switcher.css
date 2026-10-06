@@ -64,31 +64,102 @@
   box-shadow: var(--drop-shadow);
   border-radius: var(--border-radius);
 
-  width: fit-content;
-  height: fit-content;
+  --pre-width: fit-content;
+  width: var(--pre-width);
+  --pre-height: fit-content;
+  height: var(--pre-height);
+
+
+
+  @media only screen and (max-width: 600px) {
+    /* Override width to 90% on smaller screens */
+    width: 90%;
+  }
+
 }
 
 /* Hide buttons by default */
-.code-switcher > .buttons {
+.code-switcher pre .buttons {
   display: none;
 }
 
-/* Visually hide elements that arn't <pre>
+/* Visually hide elements that aren't <pre>
  * I.e. stuff that would interfere with the animation, but should 
  * be kept around for people using screen readers.
  * */
 @media (prefers-reduced-motion: no-preference) {
+
+  /* Setting the height for this animation, only when we are animating */
+  #use-example {
+    height: 9em;
+  }
+
   .code-switcher > :not(pre) {
     opacity: 0;
   }
-  .code-switcher > .buttons { 
+
+  .code-switcher > p:first-of-type() {
+    display: none;
+  }
+
+  .code-switcher > pre > .buttons {
     display: initial;
     opacity: 1;
     position: absolute;
     top: 0;
+    left: 0;
+
     button {
+      border: none;
       position: relative;
       opacity: 1;
+      background: var(--color-accent-muted);
+      padding: var(--gap-half) var(--gap);
+      align-items: center;
+      justify-content: center;
+      gap: var(--gap);
+      font-size: var(--font-size-small);
+      color: var(--color-link);
+      border-radius: none;
+      text-decoration: none;
+      outline: 1px solid transparent;
+      outline-offset: -1px;
+      cursor: pointer;
+
+      &:first-child {
+        /* border-right: 1px var(--color-accent-dark) dashed; */
+        margin-right: calc(var(--gap-half) / 3);
+      }
+    }
+  }
+
+  /* default content is 'Automatic' */
+  .code-switcher > pre > .buttons > button.play-pause::before {
+    content: "Automatic";
+  }
+
+  /* When the animation is autoplaying, the button should say 'Pause'. */
+  .code-switcher.playing > pre > .buttons > button.play-pause::before {
+    content: "Pause";
+  }
+
+  @media only screen and (min-width: 600px) {
+    #use-example {
+      /* When animating and on wide screen, the codeblock is using space so efficiently it can now do with only 7 ems! */
+      height: 7em;
+      margin-block: -0.10em;
+    }
+
+
+    .code-switcher>pre {
+      padding-right: calc(var(--gap) * 15);
+      padding-top: var(--gap);
+
+      >.buttons {
+        /* Display on the right side if the screen is wide enough */
+        right: 0;
+        left: unset;
+      }
     }
   }
 
@@ -99,13 +170,18 @@
   .code-switcher > pre {
     position: absolute;
     margin-top: 0px;
-    top: 2.5em;
-
+    top: 0;
     transition: height 1000ms ease-in-out, width 1000ms ease-in-out;
+
+    @media only screen and (max-width: 600px) {
+      /* Add some extra padding to the top, so the buttons have enough space to stay above the code and not overlap it. */
+      padding-top: calc(var(--gap) * 3);
+    }
   }
 
   /* defines the base state for all span's that have a 'data-switcher-id' attribute associated with them. */
   .code-switcher {
+
     /* with the matching pieces at their transformed location */
     [data-switcher-id] {
       /* inline-block instead of inline so transform can work */
@@ -115,8 +191,10 @@
 
   /* the first <pre> within the .code-switcher should be showing */
   .code-switcher-toggle-in {
+
     /* the <pre> we are going to show now */
     pre:nth-of-type(1) {
+
       /* matching code appears and moves to its home position */
       code > [data-switcher-id] {
         transition: transform 1000ms ease-in-out;
@@ -133,6 +211,7 @@
 
     /* the <pre> we are going to hide now */
     pre:nth-of-type(2) {
+
       /* unmatched code fades out */
       code > span:not([data-switcher-id]) {
         transition: opacity 300ms;
@@ -146,13 +225,20 @@
 
       background: transparent;
       box-shadow: none;
+
+      /* The buttons glued to this specific pre are now also to be hidden. */
+      .buttons {
+        opacity: 0;
+      }
     }
   }
 
   /* the second <pre> within the .code-switcher should be showing */
   .code-switcher-toggle-out {
+
     /* the <pre> we are going to show now */
     pre:nth-of-type(2) {
+
       /* matching code appears and moves to its home position */
       code > [data-switcher-id] {
         transition: transform 1000ms ease-in-out;
@@ -169,6 +255,7 @@
 
     /* the <pre> we are going to hide now */
     pre:nth-of-type(1) {
+
       /* unmatched code fades out */
       code > span:not([data-switcher-id]) {
         transition: opacity 300ms;
@@ -182,6 +269,10 @@
 
       background: transparent;
       box-shadow: none;
+
+      .buttons {
+        opacity: 0;
+      }
     }
   }
 }

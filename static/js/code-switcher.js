@@ -94,7 +94,9 @@ function init() {
 }`
   document.head.appendChild(style)
 
-  addButtons(target)
+  /* Adding the buttons to both pre's, but the CSS will make sure you only see one set at a time. */
+  addButtons(target, children[0]);
+  addButtons(target, children[1]);
 }
 
 function addSpanStyles(spanId, first, second, styles) {
@@ -132,23 +134,24 @@ function addPreStyles(children, styles) {
   const height2 = pre2.height;
   const width2 = pre2.width;
 
-  styles.push(`.code-switcher-toggle-in > pre:nth-of-type(1) {
-  height: ${height1}px;
-  width: ${width1}px;
-}`)
-  styles.push(`.code-switcher-toggle-in > pre:nth-of-type(2) {
-  height: ${height1}px;
-  width: ${width1}px;
-}`)
-
-  styles.push(`.code-switcher-toggle-out > pre:nth-of-type(2) {
-  height: ${height2}px;
-  width: ${width2}px;
-}`)
-  styles.push(`.code-switcher-toggle-out > pre:nth-of-type(1) {
-  height: ${height2}px;
-  width: ${width2}px;
-}`)
+  styles.push(`
+    .code-switcher-toggle-in > pre:nth-of-type(1) {
+      --pre-height: ${height2}px;
+      --pre-width: ${width1}px;
+    }
+    .code-switcher-toggle-in > pre:nth-of-type(2) {
+      --pre-height: ${height2}px;
+      --pre-width: ${width1}px;
+    }
+    .code-switcher-toggle-out > pre:nth-of-type(2) {
+      --pre-height: ${height2}px;
+      --pre-width: ${width1}px; /*a*/
+    }
+    .code-switcher-toggle-out > pre:nth-of-type(1) {
+      --pre-height: ${height2}px;
+      --pre-width: ${width1}px;
+    }
+  `);
 }
 
 /* Get the <span>s that have a 'data-switcher-id' attribute
@@ -176,12 +179,12 @@ function toggleCode(element) {
 
 // buttons ----------------------------------------------------------------------
 
-function addButtons(target) {
+function addButtons(codeswitcher, target) {
   const buttons = document.createElement("div")
   buttons.classList.add("buttons")
 
-  addToggleButton(target, buttons)
-  addPlayPauseButton(target, buttons)
+  addToggleButton(codeswitcher, buttons)
+  addPlayPauseButton(codeswitcher, buttons)
 
   target.appendChild(buttons)
 }
@@ -203,18 +206,14 @@ var autoplayIntervalId;
 
 function addPlayPauseButton(target, buttons) {
   const button = document.createElement("button")
-  button.textContent = "Automatic"
-
+  button.classList.add("play-pause")
+  
   button.onclick = function() {
     const playing = target.classList.toggle("playing")
-
+    
     if (playing) {
-      button.textContent = "Pause" 
-
       autoplayIntervalId = window.setInterval(automaticToggle(target), 3000)
     } else {
-      button.textContent = "Automatic"
-
       window.clearInterval(autoplayIntervalId)
     }
   }
